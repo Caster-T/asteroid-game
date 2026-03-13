@@ -1,10 +1,11 @@
 import pygame
 from constants import *
-from logger import log_state
+from logger import log_state, log_event
 from circleshape import CircleShape
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+import sys
 
 def main():
     pygame.init()
@@ -37,6 +38,14 @@ def main():
                 return
             
         updatable.update(dt)
+
+        for asteroid in asteroids:
+            distance_vector = player.position - asteroid.position
+            distance = distance_vector.length()
+            if distance <= player.radius + asteroid.radius:
+                log_event("player_hit")
+                print("Game over!")
+                sys.exit()
 
         screen.fill("black")
         
