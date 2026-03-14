@@ -7,9 +7,11 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 import sys
 from shot import Shot
+from score import Score
 
 def main():
     pygame.init()
+    
 
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     print(f"Screen width: {SCREEN_WIDTH}\nScreen height: {SCREEN_HEIGHT}")
@@ -35,6 +37,12 @@ def main():
     shots = pygame.sprite.Group()
     Shot.containers = (shots, updatable, drawable)
     
+    
+    score = Score()
+    updatable.add(score)
+    drawable.add(score)
+
+    
 
     while True:
         log_state()
@@ -58,6 +66,7 @@ def main():
                 distance = distance_vector.length()
                 if distance <= shot.radius + asteroid.radius:
                     log_event("asteroid_shot")
+                    score.add_points()
                     pygame.sprite.Sprite.kill(shot)
                     asteroid.split()
 
@@ -65,6 +74,8 @@ def main():
         
         for obj in drawable:
             obj.draw(screen)
+
+        
 
         pygame.display.flip()
         
