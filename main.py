@@ -8,6 +8,7 @@ from asteroidfield import AsteroidField
 import sys
 from shot import Shot
 from score import Score
+from screens import draw_game_over
 
 def main():
     pygame.init()
@@ -20,6 +21,7 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
     
+    game_state = "playing"
 
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -42,23 +44,33 @@ def main():
     updatable.add(score)
     drawable.add(score)
 
-    
+    keys = pygame.key.get_pressed()
 
     while True:
         log_state()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-            
-        updatable.update(dt)
+            if game_state == "game_over":
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    for asteroid in asteroids:
+                        asteroid.kill()
+                    shots.empty()
+                    score.score = 0
+                    player.position = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+                    new_field = AsteroidField()
+                    game_state = "playing"
 
-        for asteroid in asteroids:
-            distance_vector = player.position - asteroid.position
-            distance = distance_vector.length()
-            if distance <= player.radius + asteroid.radius:
-                log_event("player_hit")
-                print("Game over!")
-                sys.exit()
+        if game_state == "playing":
+            updatable.update(dt)
+            for asteroid in asteroids:
+                distance_vector = player.position - asteroid.position
+                distance = distance_vector.length()
+                if distance <= player.radius + asteroid.radius:
+                    log_event("player_hit")
+                    print("Game over!")
+                    game_state = "game_over"
+                    break
 
         for asteroid in asteroids:
             for shot in shots:
@@ -69,13 +81,17 @@ def main():
                     score.add_points()
                     pygame.sprite.Sprite.kill(shot)
                     asteroid.split()
+            
+
+        
 
         screen.fill("black")
         
         for obj in drawable:
             obj.draw(screen)
 
-        
+        if game_state == "game_over":
+            draw_game_over(screen, score.score , SCREEN_WIDTH, SCREEN_HEIGHT)
 
         pygame.display.flip()
         
