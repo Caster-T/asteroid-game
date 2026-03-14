@@ -52,6 +52,15 @@ def main():
                 print("Game over!")
                 sys.exit()
 
+        for asteroid in asteroids:
+            for shot in shots:
+                distance_vector = shot.position - asteroid.position
+                distance = distance_vector.length()
+                if distance <= shot.radius + asteroid.radius:
+                    log_event("asteroid_shot")
+                    pygame.sprite.Sprite.kill(shot)
+                    asteroid.split()
+
         screen.fill("black")
         
         for obj in drawable:
