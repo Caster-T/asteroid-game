@@ -46,6 +46,8 @@ def main():
 
     keys = pygame.key.get_pressed()
 
+    high_score = score.get_high_score()
+
     while True:
         log_state()
         for event in pygame.event.get():
@@ -70,6 +72,9 @@ def main():
                     log_event("player_hit")
                     print("Game over!")
                     game_state = "game_over"
+                    if score.score > high_score:
+                        high_score = score.score
+                        score.save_high_score()
                     break
 
         for asteroid in asteroids:
@@ -91,7 +96,7 @@ def main():
             obj.draw(screen)
 
         if game_state == "game_over":
-            draw_game_over(screen, score.score , SCREEN_WIDTH, SCREEN_HEIGHT)
+            draw_game_over(screen, score.score , high_score, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         pygame.display.flip()
         

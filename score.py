@@ -17,3 +17,18 @@ class Score(pygame.sprite.Sprite):
     def draw(self, screen):
         text = self.font.render(f"Score:{int(self.score)}", True, (255,255,255))
         screen.blit(text,(10,10))
+    
+    def get_high_score(self):
+        try:
+            with open("highscore.txt", "r") as file:
+                return int(file.read())
+        except:
+            with open("highscore.txt", "w") as file:
+                file.write("0")
+            return 0
+        
+    def save_high_score(self):
+        with open("highscore.txt", "w") as file:
+            file.write(str(int(self.score)))
+
+ 

@@ -1,7 +1,7 @@
 import pygame
 from constants import *
 
-def draw_game_over(screen, score, screen_width, screen_height):
+def draw_game_over(screen, score, high_score, screen_width, screen_height):
     font = pygame.font.Font(None, 72)
     text = font.render("GAME OVER", True, (255,255,255))
     rect = text.get_rect(center=(screen_width/2, screen_height/2 - 50))
@@ -16,6 +16,11 @@ def draw_game_over(screen, score, screen_width, screen_height):
     reset_text = reset_font.render("Press R to restart", True, (255,255,255))
     reset_rect = reset_text.get_rect(center=(screen_width/2,screen_height/2 + 100))
     screen.blit(reset_text, reset_rect)
+
+    high_score_font = pygame.font.Font(None, 48)
+    high_score_text = high_score_font.render(f"High score {int(high_score)}", True, (255,255,255))
+    high_score_rect = high_score_text.get_rect(center=(screen_width/2,screen_height/2 + 50))
+    screen.blit(high_score_text, high_score_rect)
 
 
     
